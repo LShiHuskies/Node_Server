@@ -3,12 +3,11 @@ const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
     // res.sendFile(path.join(__dirname, '..', 'views', 'add-product.html'));
-    res.render('add-product', {
+    res.render('admin/edit-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
-        formsCSS: true,
-        productCSS: true,
-        activeAddProduct: true
+        editing: false,
+        isAuthenticated: req.session.isLoggedIn
     });
 };
 
@@ -90,16 +89,29 @@ exports.getProducts = (req, res, next) => {
     //     }); 
     // });
 
-    req.user
-        .getProducts()
-        .then(products => {
-            res.render('admin/products', {
-                prods: products,
-                pageTitle: 'Admin Products',
-                path: '/admin/products'
-            });
-        })
-        .catch(err => console.log(err));
+    // req.user
+    //     .getProducts()
+    //     .then(products => {
+    //         res.render('admin/products', {
+    //             prods: products,
+    //             pageTitle: 'Admin Products',
+    //             path: '/admin/products'
+    //         });
+    //     })
+    //     .catch(err => console.log(err));
+
+
+    Product.find()
+    .then(products => {
+        console.log(products);
+        res.render('admin/products', {
+            prods: products,
+            pageTitle: 'Admin Products',
+            path: '/admin/products',
+            isAuthenticated: req.session.isLoggedIn
+        });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
